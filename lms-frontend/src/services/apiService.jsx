@@ -6,13 +6,9 @@ const api = axios.create({
     baseURL: API_BASE_URL,
     headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json'
     },
-    withCredentials: true,
-    // Add CORS configuration
-    crossDomain: true,
-    xhrFields: {
-        withCredentials: true
-    }
+    withCredentials: true
 });
 
 // Add request interceptor for authentication
@@ -21,9 +17,9 @@ api.interceptors.request.use((config) => {
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
-    // Add CORS headers to every request
-    config.headers['Access-Control-Allow-Origin'] = '*';
     return config;
+}, (error) => {
+    return Promise.reject(error);
 });
 
 // Add response interceptor for error handling
@@ -38,11 +34,17 @@ api.interceptors.response.use(
         } else if (error.request) {
             // The request was made but no response was received
             console.error('Network Error:', error.request);
-            return Promise.reject({ message: 'Network error. Please check your connection.' });
+            return Promise.reject({ 
+                message: 'Network error. Please check your connection.',
+                error: error
+            });
         } else {
             // Something happened in setting up the request that triggered an Error
             console.error('Error:', error.message);
-            return Promise.reject({ message: 'An unexpected error occurred.' });
+            return Promise.reject({ 
+                message: 'An unexpected error occurred.',
+                error: error
+            });
         }
     }
 );

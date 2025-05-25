@@ -34,8 +34,19 @@ export default function Login() {
         setError('');
 
         try {
+            console.log('Attempting login with credentials:', { ...credentials, password: '***' });
             const response = await authService.login(credentials);
-            const { id, userType, name } = response;
+            console.log('Login response:', response);
+
+            if (!response) {
+                throw new Error('No response received from server');
+            }
+
+            const { id, userType, name, token } = response;
+
+            if (!id || !userType) {
+                throw new Error('Invalid response format from server');
+            }
 
             // Store user info in localStorage
             localStorage.setItem('userId', id);
@@ -43,20 +54,22 @@ export default function Login() {
             localStorage.setItem('userName', name);
             
             // Set auth token if available
-            if (response.token) {
-                localStorage.setItem('token', response.token);
+            if (token) {
+                localStorage.setItem('token', token);
             }
 
             if (userType === 'Student') {
                 try {
                     const studentDetails = await authService.getLoginById(id);
+                    console.log('Student details:', studentDetails);
+                    
                     if (studentDetails?.studentId) {
                         localStorage.setItem('studentId', studentDetails.studentId);
                     }
                 } catch (studentError) {
                     console.error("Failed to fetch studentId:", studentError);
-                    setError("Login succeeded, but failed to retrieve student details.");
-                    return;
+                    // Don't block login if student details fetch fails
+                    console.warn("Continuing with login despite student details fetch failure");
                 }
             }
 
@@ -80,7 +93,11 @@ export default function Login() {
             }
         } catch (error) {
             console.error('Login failed:', error);
-            setError(error.message || 'Login failed. Please check your credentials.');
+            setError(
+                error.message || 
+                error.error?.message || 
+                'Login failed. Please check your credentials and try again.'
+            );
         } finally {
             setLoading(false);
         }
@@ -101,6 +118,7 @@ export default function Login() {
                             value={credentials.username}
                             onChange={handleInputChange}
                             required
+                            disabled={loading}
                         />
                     </div>
                     <div className="form-group">
@@ -111,6 +129,7 @@ export default function Login() {
                             value={credentials.password}
                             onChange={handleInputChange}
                             required
+                            disabled={loading}
                         />
                     </div>
                     <div className="form-group">
@@ -119,6 +138,7 @@ export default function Login() {
                             name="userType"
                             value={credentials.userType}
                             onChange={handleInputChange}
+                            disabled={loading}
                         >
                             <option value="Student">Student</option>
                             <option value="Teacher">Teacher</option>
