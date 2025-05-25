@@ -1,0 +1,11 @@
+.teacher-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.teacher-content {
+  flex: 1;
+  padding: 20px;
+  margin-left: 250px; /* Width of the sidebar */
+  background-color: #f8f9fa;
+} 

@@ -1,0 +1,78 @@
+.admin-student-dashboard {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .admin-dashboard-header {
+    margin-bottom: 2rem;
+  }
+  
+  .admin-dashboard-header h1 {
+    color: #333;
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+  }
+  
+  .admin-dashboard-content {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    padding: 1rem;
+  }
+  
+  .search-box {
+    flex: 1;
+    max-width: 400px;
+    margin-right: 1rem;
+  }
+  
+  .search-box input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .search-box input:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+    outline: none;
+  }
+  
+  .search-box input::placeholder {
+    color: #6c757d;
+  }
+  
+  /* Override some StudentList styles to match admin theme */
+  .admin-dashboard-content .container {
+    padding: 0;
+    max-width: 100%;
+  }
+  
+  .admin-dashboard-content .table {
+    margin-bottom: 0;
+  }
+  
+  .admin-dashboard-content .btn-primary {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+  }
+  
+  .admin-dashboard-content .btn-primary:hover {
+    background-color: #45a049;
+    border-color: #45a049;
+  }
+  
+  .admin-dashboard-content .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+  }
+  
+  .admin-dashboard-content .btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+  } 
