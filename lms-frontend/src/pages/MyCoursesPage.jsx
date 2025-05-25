@@ -4,8 +4,6 @@ import { enrollmentService } from "../services/apiService";
 import "../styles/MyCoursesPage.css";
 import "../styles/CourseCard.css"; // Import CourseCard styling
 
-const API_BASE_URL = "http://localhost:8080/api";
-
 // Course icons mapping based on subject/category
 const courseIcons = {
   programming: "💻",
@@ -104,21 +102,33 @@ export default function MyCoursesPage() {
 
   const fetchApprovedCourses = async (studentId) => {
     try {
-      const coursesData = await enrollmentService.getByStudent(studentId);
+      setLoading(true);
+      setError(null);
+      
+      // Try to use the specific approved courses endpoint first
+      let approvedCourses;
+      try {
+        approvedCourses = await enrollmentService.getApprovedByStudent(studentId);
+      } catch (err) {
+        // Fallback: Get all enrollments and filter approved ones
+        console.log("Approved endpoint not available, using fallback method");
+        const allEnrollments = await enrollmentService.getByStudent(studentId);
+        approvedCourses = allEnrollments.filter(
+          enrollment => enrollment.status === 'APPROVED' || enrollment.status === 'Approved'
+        );
+      }
       
       // Process the data to enhance it with visual elements
-      const enhancedCourses = coursesData
-        .filter(enrollment => enrollment.status === "Approved")
-        .map(course => ({
-          ...course,
-          icon: getCourseIcon(course.courseTitle, course.category),
-        }));
+      const enhancedCourses = approvedCourses.map(course => ({
+        ...course,
+        icon: getCourseIcon(course.courseTitle, course.category),
+      }));
       
       setEnrolledCourses(enhancedCourses);
-      setLoading(false);
     } catch (err) {
       console.error("Error fetching enrolled courses:", err);
       setError("Failed to load your courses. Please try again later.");
+    } finally {
       setLoading(false);
     }
   };
@@ -127,12 +137,31 @@ export default function MyCoursesPage() {
     navigate(`/course/${courseId}/content`);
   };
 
+  const handleRefresh = () => {
+    const studentId = localStorage.getItem("studentId");
+    if (studentId) {
+      fetchApprovedCourses(studentId);
+    }
+  };
+
   if (loading) {
-    return <div className="loading-container">Loading your courses...</div>;
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Loading your courses...</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="error-message">{error}</div>;
+    return (
+      <div className="error-container">
+        <div className="error-message">{error}</div>
+        <button onClick={handleRefresh} className="retry-button">
+          Try Again
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -150,61 +179,75 @@ export default function MyCoursesPage() {
             You don't have any approved courses yet. If you've recently enrolled,
             your enrollment may be pending administrative approval.
           </p>
-          <Link to="/courses" className="browse-courses-button">
-            Browse Available Courses
-          </Link>
+          <div className="no-courses-actions">
+            <Link to="/courses" className="browse-courses-button">
+              Browse Available Courses
+            </Link>
+            <button onClick={handleRefresh} className="check-status-button">
+              Check Enrollment Status
+            </button>
+          </div>
         </div>
       ) : (
-        <div className="enrolled-courses-grid">
-          {enrolledCourses.map((enrollment) => (
-            <div key={`${enrollment.studentId}-${enrollment.courseId}`} className="course-card">
-              <div className="course-icon">{enrollment.icon}</div>
-              <div className="course-info">
-                <h3>{enrollment.courseTitle}</h3>
-                <p>
-                  <span className="course-code">{enrollment.courseCode}</span>
-                  {enrollment.instructor && (
-                    <>
-                      <br />
-                      <span className="course-instructor">
-                        Instructor: {enrollment.instructor}
-                      </span>
-                    </>
-                  )}
-                  <br />
-                  <span className="enrollment-date">
-                    Enrolled: {new Date(enrollment.enrollDate).toLocaleDateString()}
-                  </span>
-                  <br />
-                  <span className="status approved">{enrollment.status}</span>
-                  
-                  {enrollment.creditHours && (
-                    <>
-                      <br />
-                      <span className="credit-hours">
-                        Credits: {enrollment.creditHours}
-                      </span>
-                    </>
-                  )}
-                </p>
-                
-                {enrollment.courseDescription && (
-                  <div className="course-description">
-                    {enrollment.courseDescription.length > 100 
-                      ? `${enrollment.courseDescription.substring(0, 100)}...` 
-                      : enrollment.courseDescription}
+        <div className="enrolled-courses-section">
+          <div className="courses-summary">
+            <h2>Enrolled Courses ({enrolledCourses.length})</h2>
+          </div>
+          
+          <div className="enrolled-courses-grid">
+            {enrolledCourses.map((enrollment) => (
+              <div className="course-card" key={enrollment.courseId || enrollment.id}>
+                <div className="course-header">
+                  <div className="course-icon">{enrollment.icon}</div>
+                  <div className="course-status">
+                    <span className="status approved">{enrollment.status}</span>
                   </div>
-                )}
+                </div>
                 
-                <button 
-                  className="start-learning-button"
-                  onClick={() => handleStartLearning(enrollment.courseId)}
-                >
-                  Start Learning
-                </button>
+                <div className="course-info">
+                  <h3 className="course-title">{enrollment.courseTitle}</h3>
+                  
+                  <div className="course-meta">
+                    <span className="course-code">{enrollment.courseCode}</span>
+                    {enrollment.creditHours && (
+                      <span className="credit-hours">
+                        {enrollment.creditHours} Credits
+                      </span>
+                    )}
+                  </div>
+
+                  {enrollment.instructor && (
+                    <div className="course-instructor">
+                      <strong>Instructor:</strong> {enrollment.instructor}
+                    </div>
+                  )}
+                  
+                  <div className="enrollment-info">
+                    <span className="enrollment-date">
+                      Enrolled: {new Date(enrollment.enrollDate).toLocaleDateString()}
+                    </span>
+                  </div>
+                  
+                  {enrollment.courseDescription && (
+                    <div className="course-description">
+                      {enrollment.courseDescription.length > 100 
+                        ? `${enrollment.courseDescription.substring(0, 100)}...` 
+                        : enrollment.courseDescription}
+                    </div>
+                  )}
+                </div>
+                
+                <div className="course-actions">
+                  <button 
+                    className="start-learning-button"
+                    onClick={() => handleStartLearning(enrollment.courseId)}
+                  >
+                    Start Learning
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
     </div>

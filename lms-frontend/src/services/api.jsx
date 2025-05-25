@@ -21,7 +21,7 @@ export const API_ENDPOINTS = {
 
     // Teacher endpoints
     teacher: {
-        create: '/teacher',
+        create: '/teacher/register',
         getAll: '/teacher',
         getById: (id) => `/teacher/${id}`,
         update: (id) => `/teacher/${id}`,
@@ -88,6 +88,7 @@ export const API_ENDPOINTS = {
         uploadPayment: '/api/enroll/upload-payment',
         getByStudent: (studentId) => `/api/enroll/student/${studentId}`,
         getSpecific: (studentId, courseId) => `/api/enroll/${studentId}/${courseId}`,
+        getApprovedByStudent: (studentId) => `/api/enroll/student/${studentId}/approved`, 
         getPending: '/api/enroll/pending',
         getAll: '/api/enroll/all',
         approve: (studentId, courseId) => `/api/enroll/approve/${studentId}/${courseId}`,

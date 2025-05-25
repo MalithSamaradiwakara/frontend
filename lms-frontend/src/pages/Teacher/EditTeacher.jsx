@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 import { teacherService } from '../../services/apiService';
 
 const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dql9au2cs/image/upload';
@@ -27,8 +28,9 @@ export default function EditTeacher() {
 
     const loadTeacher = async () => {
         try {
-            const response = await teacherService.getTeacher(id);
-            setTeacher(response.data);
+        
+            const response = await teacherService.getById(id);
+            setTeacher(response); 
         } catch (error) {
             console.error("Error loading teacher:", error);
         }
@@ -44,10 +46,11 @@ export default function EditTeacher() {
 
         try {
             setUploading(true);
-            const response = await teacherService.uploadPhoto(formData);
+            const response = await axios.post(CLOUDINARY_URL, formData);
             setTeacher({ ...teacher, tPhoto: response.data.secure_url });
         } catch (err) {
             console.error("Upload Error:", err);
+            alert("Failed to upload image. Please try again.");
         } finally {
             setUploading(false);
         }

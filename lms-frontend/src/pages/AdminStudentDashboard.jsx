@@ -120,6 +120,12 @@ const AdminStudentDashboard = () => {
                       >
                         View
                       </Link>
+                      <Link 
+                        className="btn btn-outline-warning" 
+                        to={`/admin/students/editstudent/${student.id}`}
+                      >
+                        Edit
+                      </Link>
                       <button 
                         className="btn btn-outline-danger" 
                         onClick={() => deleteStudent(student.id)}

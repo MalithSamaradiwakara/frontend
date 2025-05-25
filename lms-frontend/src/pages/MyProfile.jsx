@@ -79,13 +79,12 @@ const MyProfile = () => {
                                 <button
                                     className="btn btn-outline-primary w-100"
                                     onClick={() => {
-                                        const userId = localStorage.getItem('userId');
-                                        if (!userId) {
+                                        if (!student.id) {
                                             alert('Please log in to edit your profile');
                                             navigate('/login');
                                             return;
                                         }
-                                        navigate(`/students/edit/${userId}`);
+                                        navigate(`/students/edit/${student.id}`);
                                     }}
                                 >
                                     Edit Profile

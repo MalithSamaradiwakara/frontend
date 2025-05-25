@@ -256,6 +256,10 @@ export const enrollmentService = {
         const response = await api.get(API_ENDPOINTS.enrollment.getByStudent(studentId));
         return response.data;
     },
+    getApprovedByStudent: async (studentId) => {
+        const response = await api.get(API_ENDPOINTS.enrollment.getApprovedByStudent(studentId));
+        return response.data;
+    },
     getSpecific: async (studentId, courseId) => {
         const response = await api.get(API_ENDPOINTS.enrollment.getSpecific(studentId, courseId));
         return response.data;

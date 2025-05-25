@@ -152,6 +152,7 @@ const AppContent = () => {
             <Route path="students" element={<AdminStudentDashboard />} />
             <Route path="students/addstudent" element={<AddStudent />} />
             <Route path="students/viewstudent/:id" element={<ViewStudent />} />
+            <Route path="students/editstudent/:id" element={<EditStudent />} />
             <Route path="tutors" element={<AdminTeacherDashboard /> } />
             <Route path="tutors/view/:id" element={<ViewTeacherAdmin />} />
             <Route path="teachers/addteacher" element={<AddTeacher />} />
