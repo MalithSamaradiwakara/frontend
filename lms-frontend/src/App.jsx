@@ -47,6 +47,15 @@ import AdminTeacherDashboard from './pages/AdminTeacherDashboard';
 import TeacherLayout from './components/TeacherLayout';
 import TeacherDashboard from './pages/Teacher/TeacherDashboard';
 import ViewTeacherAdmin from './pages/Teacher/ViewTeacherAdmin';
+import MyQuizzes from "./pages/QuizzesAndAssignments/Student/MyQuizzes";
+import MyAssignments from "./pages/QuizzesAndAssignments/Student/MyAssignments";
+import AttemptQuiz from "./pages/QuizzesAndAssignments/Student/AttemptQuiz";
+import TeacherAssignmentsPage from "./pages/QuizzesAndAssignments/Teacher/TeacherAssignmentsPage";
+import SubmissionsPage from "./pages/QuizzesAndAssignments/Teacher/SubmissionPage";
+import TeacherQuizzesPage from "./pages/QuizzesAndAssignments/Teacher/TeacherQuizzesPage";
+import EditQuizPage from "./pages/QuizzesAndAssignments/Teacher/EditQuizPage";
+import CreateQuizPage from "./pages/QuizzesAndAssignments/Teacher/CreateQuizPage";
+import AttemptsPage from "./pages/QuizzesAndAssignments/Teacher/AttemptsPage";
 
 // Generic Protected Route
 const ProtectedRoute = ({ children, allowedUserTypes, redirectPath = '/login' }) => {
@@ -83,6 +92,12 @@ const AppContent = () => {
           }
         >
           <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
+          <Route path="/teacher/assignments" element={<TeacherAssignmentsPage/>}/>
+          <Route path="/teacher/assignments/submissions" element={<SubmissionsPage />} />
+          <Route path="/teacher/quizzes" element={<TeacherQuizzesPage />} />
+          <Route path="/teacher/quizzes/attempts" element={<AttemptsPage/>}/>
+          <Route path="/teacher/quizzes/edit/:id" element={<EditQuizPage />} />
+          <Route path="/teacher/quizzes/create-new" element={<CreateQuizPage />} />
           <Route path="/teacher/courses" element={<div>Teacher Courses</div>} />
           <Route path="/teacher/students" element={<div>Teacher Students</div>} />
         </Route>
@@ -117,6 +132,9 @@ const AppContent = () => {
         {/* Student Management */}
         <Route path="/myprofile/:id" element={<MyProfile />} />
         <Route path="/students/view/:id" element={<ViewStudent />} />
+        <Route path="/student/:id/quizzes" element={<MyQuizzes />} />
+        <Route path="/student/:id/assignments" element={<MyAssignments />} />
+        <Route path="/student/:id/attempt-quiz/:quizId" element={<AttemptQuiz />} />
         <Route 
           path="/students/edit/:id" 
           element={

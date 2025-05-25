@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { studentService, authService } from '../../services/apiService';
+import axios from 'axios'; // Only used for Cloudinary upload
 
-// Cloudinary upload preset and cloud name
+// Cloudinary upload preset and cloud name 
 const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dql9au2cs/image/upload';
 const UPLOAD_PRESET = 'brightpath';
 
@@ -28,12 +29,12 @@ export default function EditStudent() {
     const loadStudent = async () => {
         try {
             // First get login data to get student ID
-            const loginResponse = await axios.get(`http://localhost:8080/api/auth/login/${id}`);
-            const studentId = loginResponse.data.studentId;
+            const loginData = await authService.getLoginById(id);
+            const studentId = loginData.studentId;
             
             // Then get student data
-            const result = await axios.get(`http://localhost:8080/students/profile/${studentId}`);
-            setStudent(result.data);
+            const result = await studentService.getProfile(studentId);
+            setStudent(result);
         } catch (error) {
             console.error("Error loading student:", error);
             alert("Failed to load student details. Please try again.");
@@ -72,11 +73,11 @@ export default function EditStudent() {
         e.preventDefault();
         try {
             // First get login data to get student ID
-            const loginResponse = await axios.get(`http://localhost:8080/api/auth/login/${id}`);
-            const studentId = loginResponse.data.studentId;
+            const loginData = await authService.getLoginById(id);
+            const studentId = loginData.studentId;
             
             // Then update student data
-            await axios.put(`http://localhost:8080/students/${studentId}`, student);
+            await studentService.update(studentId, student);
             alert("Profile updated successfully!");
             navigate(`/myprofile/${id}`);
         } catch (error) {

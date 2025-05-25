@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { authService, teacherService } from '../../services/apiService';
 import defaultProfileImage from '../../pic/dummy.jpg';
 import '../../styles/TeacherDashboard.css';
@@ -7,6 +8,7 @@ const TeacherDashboard = () => {
   const [teacher, setTeacher] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTeacherProfile = async () => {

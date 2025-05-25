@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { teacherService } from '../services/apiService';
 import defaultTeacherImage from '../pic/dummy.jpg';
 
 export default function AdminTeacherList() {
@@ -13,8 +13,8 @@ export default function AdminTeacherList() {
 
     const loadTeachers = async () => {
         try {
-            const result = await axios.get("http://localhost:8080/teacher");
-            setTeachers(result.data);
+            const result = await teacherService.getAll();
+            setTeachers(result);
         } catch (error) {
             console.error("Error loading teachers:", error);
         }
@@ -22,7 +22,7 @@ export default function AdminTeacherList() {
 
     const deleteTeacher = async (tId) => {
         try {
-            await axios.delete(`http://localhost:8080/teacher/${tId}`);
+            await teacherService.delete(tId);
             loadTeachers();
         } catch (error) {
             console.error("Error deleting teacher:", error);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
+import { teacherService } from '../../services/apiService';
 import defaultTeacherImage from '../../pic/dummy.jpg';
 
 export default function ViewTeacherAdmin() {
@@ -19,8 +19,8 @@ export default function ViewTeacherAdmin() {
     const loadTeacher = useCallback(async () => {
         try {
             setLoading(true);
-            const result = await axios.get(`http://localhost:8080/teacher/${id}`);
-            setTeacher(result.data);
+            const result = await teacherService.getById(id);
+            setTeacher(result);
             setError(null);
         } catch (error) {
             console.error("Error loading teacher:", error);

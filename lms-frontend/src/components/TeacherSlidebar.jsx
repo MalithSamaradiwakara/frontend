@@ -10,7 +10,9 @@ const DemoTeacherSidebar = () => {
   const userName = localStorage.getItem('userName') || 'DemoTeacher';
 
   const menuItems = [
-    { title: "Dashboard", path: "/teacher/dashboard", icon: "📊" }
+    { title: "Dashboard", path: "/teacher/dashboard", icon: "📊" },
+      { title: "Quizzes", path: "/teacher/quizzes", icon: "🧠" },
+      { title: "Assignments", path: "/teacher/assignments", icon: "📚" }
   ];
 
   const handleLogout = () => {

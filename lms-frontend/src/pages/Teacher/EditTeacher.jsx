@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { teacherService } from '../../services/apiService';
 
 const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dql9au2cs/image/upload';
 const UPLOAD_PRESET = 'brightpath';
@@ -27,7 +27,7 @@ export default function EditTeacher() {
 
     const loadTeacher = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/teacher/${id}`);
+            const response = await teacherService.getTeacher(id);
             setTeacher(response.data);
         } catch (error) {
             console.error("Error loading teacher:", error);
@@ -44,7 +44,7 @@ export default function EditTeacher() {
 
         try {
             setUploading(true);
-            const response = await axios.post(CLOUDINARY_URL, formData);
+            const response = await teacherService.uploadPhoto(formData);
             setTeacher({ ...teacher, tPhoto: response.data.secure_url });
         } catch (err) {
             console.error("Upload Error:", err);
@@ -84,20 +84,8 @@ export default function EditTeacher() {
         e.preventDefault();
 
         try {
-            await axios.put(`http://localhost:8080/teacher/${id}/qualifications/full`, {
-                qualification: teacher.qualification
-            }, {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-
-            await axios.put(`http://localhost:8080/teacher/${id}`, teacher, {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-
+            await teacherService.updateQualifications(id, teacher.qualification);
+            await teacherService.update(id, teacher);
             navigate("/admin/tutors");
         } catch (error) {
             console.error("Error updating teacher:", error);

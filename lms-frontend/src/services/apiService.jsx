@@ -64,6 +64,14 @@ export const teacherService = {
         const response = await api.post(API_ENDPOINTS.teacher.create, teacherData);
         return response.data;
     },
+    getAll: async () => {
+        const response = await api.get(API_ENDPOINTS.teacher.getAll);
+        return response.data;
+    },
+    getById: async (id) => {
+        const response = await api.get(API_ENDPOINTS.teacher.getById(id));
+        return response.data;
+    },
     update: async (id, teacherData) => {
         const response = await api.put(API_ENDPOINTS.teacher.update(id), teacherData);
         return response.data;

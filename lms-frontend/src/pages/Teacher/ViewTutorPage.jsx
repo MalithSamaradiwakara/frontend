@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
+import { teacherService } from '../../services/apiService';
 import defaultTeacherImage from '../../pic/dummy.jpg';
 
 export default function ViewTutorPage() {
@@ -20,8 +20,8 @@ export default function ViewTutorPage() {
 
     const loadTeacher = async () => {
         try {
-            const result = await axios.get(`http://localhost:8080/teacher/${id}`);
-            setTeacher(result.data);
+            const result = await teacherService.getById(id);
+            setTeacher(result);
         } catch (error) {
             console.error("Error loading teacher:", error);
         }

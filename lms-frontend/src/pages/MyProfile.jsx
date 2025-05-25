@@ -131,10 +131,10 @@ const MyProfile = () => {
                                     <Link to="/my-courses" className="btn btn-primary">
                                         My Courses
                                     </Link>
-                                    <Link to={`/my-assignments/${localStorage.getItem('userId')}`} className="btn btn-primary">
+                                    <Link to={`/student/${localStorage.getItem('userId')}/assignments`} className="btn btn-primary">
                                         My Assignments
                                     </Link>
-                                    <Link to={`/my-quizzes/${localStorage.getItem('userId')}`} className="btn btn-primary">
+                                    <Link to={`/student/${localStorage.getItem('userId')}/quizzes`} className="btn btn-primary">
                                         My Quizzes
                                     </Link>
                                 </div>

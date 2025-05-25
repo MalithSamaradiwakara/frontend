@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from 'axios'; 
 import { useNavigate } from 'react-router-dom';
+import { studentService } from '../../services/apiService';
 
+// Cloudinary upload preset and cloud name
 const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dfk4fsgbt/image/upload';
-const UPLOAD_PRESET = 'StudentRegistration';
+const UPLOUD_PRESET = 'StudentRegistration';
 
 export default function AddStudent() {
     const navigate = useNavigate();
@@ -38,7 +40,7 @@ export default function AddStudent() {
         if (file) {
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('upload_preset', UPLOAD_PRESET);
+            formData.append('upload_preset', UPLOUD_PRESET);
 
             try {
                 setUploading(true);
@@ -72,7 +74,7 @@ export default function AddStudent() {
 
         try {
             const payload = { S_Name, S_Email, S_Contact, S_Photo, username, password };
-            await axios.post("http://localhost:8080/students/register", payload);
+            await studentService.register(payload);
 
             setSuccessMessage("Student registered successfully!");
             setStudent({

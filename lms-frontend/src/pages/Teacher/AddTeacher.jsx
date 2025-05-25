@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-
+import axios from 'axios';
+import { teacherService } from '../../services/apiService';
 
 const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dql9au2cs/image/upload';
 const UPLOAD_PRESET = 'brightpath';
@@ -112,13 +112,12 @@ export default function AddTeacher() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
+        setSubmitting(true);
         setError("");
 
         if (!validateForm()) {
             return;
         }
-
-        setSubmitting(true);
 
         const fullName = `${title}. ${firstName} ${lastName}`;
 
@@ -133,17 +132,8 @@ export default function AddTeacher() {
         };
 
         try {
-            const response = await axios.post(`http://localhost:8080/teacher/register`, newTeacher, {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-
-            if (response.status === 200 || response.status === 201) {
-                navigate("/admin/tutors");
-            } else {
-                setError("Failed to add teacher. Please try again.");
-            }
+            await teacherService.create(newTeacher);
+            navigate("/admin/tutors");
         } catch (error) {
             console.error("Error adding teacher:", error);
             const errorMessage = error.response?.data || "Failed to add teacher. Please try again.";

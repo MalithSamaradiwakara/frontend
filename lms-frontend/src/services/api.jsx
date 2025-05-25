@@ -22,6 +22,8 @@ export const API_ENDPOINTS = {
     // Teacher endpoints
     teacher: {
         create: '/teacher',
+        getAll: '/teacher',
+        getById: (id) => `/teacher/${id}`,
         update: (id) => `/teacher/${id}`,
         delete: (id) => `/teacher/${id}`,
         addQualification: (teacherId) => `/teacher/${teacherId}/qualifications`,
