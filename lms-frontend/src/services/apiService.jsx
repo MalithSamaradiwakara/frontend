@@ -7,7 +7,12 @@ const api = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
-    withCredentials: true
+    withCredentials: true,
+    // Add CORS configuration
+    crossDomain: true,
+    xhrFields: {
+        withCredentials: true
+    }
 });
 
 // Add request interceptor for authentication
@@ -16,6 +21,8 @@ api.interceptors.request.use((config) => {
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
+    // Add CORS headers to every request
+    config.headers['Access-Control-Allow-Origin'] = '*';
     return config;
 });
 
