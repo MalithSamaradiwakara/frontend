@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { authService } from '../services/apiService';
-import '../styles/Login.css';
 
 export default function Login() {
     const [credentials, setCredentials] = useState({
         username: '',
         password: '',
-        userType: 'Student' // Default user type
+        userType: 'Student'
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -25,7 +24,7 @@ export default function Login() {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setCredentials(prev => ({ ...prev, [name]: value }));
-        setError(''); // Clear error when user types
+        setError('');
     };
 
     const handleLogin = async (e) => {
@@ -48,12 +47,9 @@ export default function Login() {
                 throw new Error('Invalid response format from server');
             }
 
-            // Store user info in localStorage
             localStorage.setItem('userId', id);
             localStorage.setItem('userType', userType);
             localStorage.setItem('userName', name);
-            
-            // Set auth token if available
             if (token) {
                 localStorage.setItem('token', token);
             }
@@ -62,22 +58,18 @@ export default function Login() {
                 try {
                     const studentDetails = await authService.getLoginById(id);
                     console.log('Student details:', studentDetails);
-                    
                     if (studentDetails?.studentId) {
                         localStorage.setItem('studentId', studentDetails.studentId);
                     }
                 } catch (studentError) {
                     console.error("Failed to fetch studentId:", studentError);
-                    // Don't block login if student details fetch fails
-                    console.warn("Continuing with login despite student details fetch failure");
                 }
             }
 
-            // Redirect based on location state or user type
             if (location.state?.redirectUrl) {
                 navigate(location.state.redirectUrl);
             } else {
-                switch(userType) {
+                switch (userType) {
                     case 'Student':
                         navigate('/student/dashboard');
                         break;
@@ -94,8 +86,8 @@ export default function Login() {
         } catch (error) {
             console.error('Login failed:', error);
             setError(
-                error.message || 
-                error.error?.message || 
+                error.message ||
+                error.error?.message ||
                 'Login failed. Please check your credentials and try again.'
             );
         } finally {
@@ -104,50 +96,58 @@ export default function Login() {
     };
 
     return (
-        <div className="login-container">
-            <div className="login-box">
-                <h2>Login</h2>
+        <div className="container d-flex justify-content-center align-items-center vh-100">
+            <div className="card p-4 shadow" style={{ width: '100%', maxWidth: '400px' }}>
+                <h3 className="text-center mb-4">Login</h3>
                 {message && <div className="alert alert-info">{message}</div>}
                 {error && <div className="alert alert-danger">{error}</div>}
                 <form onSubmit={handleLogin}>
-                    <div className="form-group">
-                        <label>Username</label>
+                    <div className="mb-3">
+                        <label htmlFor="username" className="form-label">Username</label>
                         <input
                             type="text"
                             name="username"
+                            id="username"
                             value={credentials.username}
                             onChange={handleInputChange}
                             required
                             disabled={loading}
+                            className="form-control"
                         />
                     </div>
-                    <div className="form-group">
-                        <label>Password</label>
+                    <div className="mb-3">
+                        <label htmlFor="password" className="form-label">Password</label>
                         <input
                             type="password"
                             name="password"
+                            id="password"
                             value={credentials.password}
                             onChange={handleInputChange}
                             required
                             disabled={loading}
+                            className="form-control"
                         />
                     </div>
-                    <div className="form-group">
-                        <label>User Type</label>
+                    <div className="mb-3">
+                        <label htmlFor="userType" className="form-label">User Type</label>
                         <select
                             name="userType"
+                            id="userType"
                             value={credentials.userType}
                             onChange={handleInputChange}
                             disabled={loading}
+                            className="form-select"
                         >
                             <option value="Student">Student</option>
                             <option value="Teacher">Teacher</option>
                             <option value="Admin">Admin</option>
                         </select>
                     </div>
-                    <button type="submit" disabled={loading}>
-                        {loading ? 'Logging in...' : 'Login'}
-                    </button>
+                    <div className="d-grid">
+                        <button type="submit" className="btn btn-primary" disabled={loading}>
+                            {loading ? 'Logging in...' : 'Login'}
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
