@@ -11,10 +11,10 @@ export function UpdateQuizPage() {
     const [questions, setQuestions] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/api/quizzes/${quizId}`)
+        axios.get(`${process.env.REACT_APP_API_URL}api/quizzes/${quizId}`)
             .then(res => setQuiz(res.data));
 
-        axios.get(`http://localhost:8080/api/questions/quiz/${quizId}`)
+        axios.get(`${process.env.REACT_APP_API_URL}api/questions/quiz/${quizId}`)
             .then(res => {
                 const mapped = res.data.map(q => ({
                     ...q,
@@ -39,7 +39,7 @@ export function UpdateQuizPage() {
 
     const handleSave = async () => {
         for (const q of questions) {
-            await axios.put(`http://localhost:8080/api/questions/${q.id}`, {
+            await axios.put(`${process.env.REACT_APP_API_URL}api/questions/${q.id}`, {
                 text: q.text,
                 options: q.options.join(","),
                 correctOption: q.correctOption,

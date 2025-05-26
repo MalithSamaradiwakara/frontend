@@ -31,12 +31,12 @@ export function EditQuizPage() {
         setIsLoading(true);
 
         // Fetch quiz details
-        axios.get(`http://localhost:8080/api/quizzes/${quizId}`)
+        axios.get(`${process.env.REACT_APP_API_URL}api/quizzes/${quizId}`)
             .then(quizRes => {
                 setQuiz(quizRes.data);
 
                 // Fetch questions for this quiz
-                return axios.get(`http://localhost:8080/api/questions/quiz/${quizId}`);
+                return axios.get(`${process.env.REACT_APP_API_URL}api/questions/quiz/${quizId}`);
             })
             .then(questionsRes => {
                 // Convert answers string to separate options for display
@@ -87,7 +87,7 @@ export function EditQuizPage() {
             quiz: { quizId: parseInt(quizId) }
         };
 
-        axios.post(`http://localhost:8080/api/questions`, questionData)
+        axios.post(`${process.env.REACT_APP_API_URL}api/questions`, questionData)
             .then(res => {
                 // Convert answers back to separate options for display
                 const newQuestionWithOptions = {
@@ -150,7 +150,7 @@ export function EditQuizPage() {
             correct: parseInt(rest.correct)
         };
 
-        axios.put(`http://localhost:8080/api/questions/${editQuestionId}`, updatedQuestion)
+        axios.put(`${process.env.REACT_APP_API_URL}api/questions/${editQuestionId}`, updatedQuestion)
             .then(res => {
                 // Convert answers back to separate options for display
                 const updatedQuestionWithOptions = {
@@ -191,7 +191,7 @@ export function EditQuizPage() {
             }
 
             setTimeout(() => {
-                axios.delete(`http://localhost:8080/api/questions/${questionId}`)
+                axios.delete(`${process.env.REACT_APP_API_URL}api/questions/${questionId}`)
                     .then(() => {
                         setQuestions(prev => prev.filter(q => q.questionId !== questionId));
                     })

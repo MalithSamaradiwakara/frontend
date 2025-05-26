@@ -33,12 +33,12 @@ export function CreateQuizPage() {
                 if (!loginId) throw new Error('User not logged in');
 
                 // 🔐 Step 2: Get teacherId using loginId
-                const loginRes = await axios.get(`http://localhost:8080/api/auth/login/${loginId}`);
+                const loginRes = await axios.get(`${process.env.REACT_APP_API_URL}api/auth/login/${loginId}`);
                 const teacherId = loginRes.data.teacherId;
                 if (!teacherId) throw new Error('No teacher ID found for logged-in user');
 
                 // 📘 Step 3: Fetch courses using teacherId
-                const coursesRes = await axios.get(`http://localhost:8080/api/courses/teacher/${teacherId}`);
+                const coursesRes = await axios.get(`${process.env.REACT_APP_API_URL}api/courses/teacher/${teacherId}`);
                 setCourses(coursesRes.data);
 
             } catch (err) {
@@ -104,7 +104,7 @@ export function CreateQuizPage() {
 
         try {
             // Step 1: Create the quiz and get its ID
-            const quizResponse = await axios.post(`http://localhost:8080/api/quizzes`, {
+            const quizResponse = await axios.post(`${process.env.REACT_APP_API_URL}api/quizzes`, {
                 title: quizData.title,
                 description: quizData.description,
                 availability: quizData.availability,
@@ -117,7 +117,7 @@ export function CreateQuizPage() {
 
             // Step 2: Add questions one by one using the quiz ID
             await Promise.all(questions.map(question =>
-                axios.post(`http://localhost:8080/api/questions`, {
+                axios.post(`${process.env.REACT_APP_API_URL}api/questions`, {
                     quiz: { quizId },  // Correct way to link the question to the quiz
                     question: question.question,
                     answers: question.answers,

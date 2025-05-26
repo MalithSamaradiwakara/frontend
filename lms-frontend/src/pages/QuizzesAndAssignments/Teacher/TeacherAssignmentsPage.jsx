@@ -36,18 +36,18 @@ function TeacherAssignmentsPage() {
                 if (!loginId) throw new Error('User not logged in');
 
                 // Step 1: Get teacherId from login
-                const loginRes = await axios.get(`http://localhost:8080/api/auth/login/${loginId}`);
+                const loginRes = await axios.get(`${process.env.REACT_APP_API_URL}api/auth/login/${loginId}`);
                 const teacherId = loginRes.data.teacherId;
                 if (!teacherId) throw new Error('No teacher ID found for logged-in user');
 
                 // Step 2: Get courses taught by teacher
-                const coursesRes = await axios.get(`http://localhost:8080/api/courses/teacher/${teacherId}`);
+                const coursesRes = await axios.get(`${process.env.REACT_APP_API_URL}api/courses/teacher/${teacherId}`);
                 const courses = coursesRes.data;
                 setCourses(courses);
 
                 // Step 3: Fetch assignments for each course
                 const assignmentPromises = courses.map(course =>
-                    axios.get(`http://localhost:8080/api/assignments/course/${course.courseId}`)
+                    axios.get(`${process.env.REACT_APP_API_URL}api/assignments/course/${course.courseId}`)
                 );
 
                 const assignmentsRes = await Promise.all(assignmentPromises);
@@ -87,7 +87,7 @@ function TeacherAssignmentsPage() {
         }
 
         try {
-            const response = await axios.post(`http://localhost:8080/api/assignments`, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}api/assignments`, {
                 title: newAssignment.title,
                 description: newAssignment.description,
                 filePath: newAssignment.filePath,
@@ -149,7 +149,7 @@ function TeacherAssignmentsPage() {
             };
 
             const response = await axios.put(
-                `http://localhost:8080/api/assignments/${assignmentId}`,
+                `${process.env.REACT_APP_API_URL}api/assignments/${assignmentId}`,
                 updatedAssignment
             );
 
@@ -191,7 +191,7 @@ function TeacherAssignmentsPage() {
         if (!window.confirm("Are you sure you want to delete this assignment?")) return;
 
         try {
-            await axios.delete(`http://localhost:8080/api/assignments/${assignmentId}`);
+            await axios.delete(`${process.env.REACT_APP_API_URL}api/assignments/${assignmentId}`);
 
             setAssignmentsByCourse(prev => ({
                 ...prev,

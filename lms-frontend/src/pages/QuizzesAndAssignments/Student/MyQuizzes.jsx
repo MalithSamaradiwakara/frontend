@@ -17,18 +17,18 @@ function MyQuizzes() {
                 setError(null);
 
                 // 1. Fetch enrolled courses
-                const enrollRes = await axios.get(`http://localhost:8080/api/enroll/student/${id}`);
+                const enrollRes = await axios.get(`${process.env.REACT_APP_API_URL}api/enroll/student/${id}`);
                 const courseIds = enrollRes.data.map(enroll => enroll.course.courseId);
 
                 // 2. Fetch quizzes from each enrolled course
                 const quizPromises = courseIds.map(courseId =>
-                    axios.get(`http://localhost:8080/api/quizzes/course/${courseId}`)
+                    axios.get(`${process.env.REACT_APP_API_URL}api/quizzes/course/${courseId}`)
                 );
                 const quizzesRes = await Promise.all(quizPromises);
                 const allQuizzes = quizzesRes.flatMap(res => res.data);
 
                 // 3. Fetch completed quizzes (attempts)
-                const attemptRes = await axios.get(`http://localhost:8080/api/attempts/student/${id}`);
+                const attemptRes = await axios.get(`${process.env.REACT_APP_API_URL}api/attempts/student/${id}`);
                 const completed = attemptRes.data;
                 setCompletedQuizzes(completed);
 

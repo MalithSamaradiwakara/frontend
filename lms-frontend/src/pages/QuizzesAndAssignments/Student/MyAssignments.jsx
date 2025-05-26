@@ -21,18 +21,18 @@ function MyAssignments() {
                 setError(null);
 
                 // Fetch enrolled courses
-                const enrollRes = await axios.get(`http://localhost:8080/api/enroll/student/${id}`);
+                const enrollRes = await axios.get(`${process.env.REACT_APP_API_URL}api/enroll/student/${id}`);
                 const courseIds = enrollRes.data.map(enroll => enroll.course.courseId);
 
                 // Fetch assignments from each course
                 const assignmentPromises = courseIds.map(courseId =>
-                    axios.get(`http://localhost:8080/api/assignments/course/${courseId}`)
+                    axios.get(`${process.env.REACT_APP_API_URL}api/assignments/course/${courseId}`)
                 );
                 const assignmentsRes = await Promise.all(assignmentPromises);
                 const allAssignments = assignmentsRes.flatMap(res => res.data);
 
                 // Fetch submissions
-                const submissionRes = await axios.get(`http://localhost:8080/api/submissions/student/${id}`);
+                const submissionRes = await axios.get(`${process.env.REACT_APP_API_URL}api/submissions/student/${id}`);
                 const submittedIds = submissionRes.data.map(sub => sub.assignment.assignmentId);
 
                 // Filter available assignments
@@ -71,7 +71,7 @@ function MyAssignments() {
                 filePath: filePath
             };
 
-            const response = await axios.post(`http://localhost:8080/api/submissions`, submissionData);
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}api/submissions`, submissionData);
 
             setSubmittedAssignments(prev => [...prev, response.data]);
             setAvailableAssignments(prev =>

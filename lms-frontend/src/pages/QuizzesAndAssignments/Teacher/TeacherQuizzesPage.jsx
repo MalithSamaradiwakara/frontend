@@ -23,18 +23,18 @@ export function TeacherQuizzesPage() {
                 if (!loginId) throw new Error('No user ID found in localStorage');
 
                 // Step 1: Get teacher ID using login ID
-                const loginRes = await axios.get(`http://localhost:8080/api/auth/login/${loginId}`);
+                const loginRes = await axios.get(`${process.env.REACT_APP_API_URL}api/auth/login/${loginId}`);
                 const teacherId = loginRes.data.teacherId;
 
                 if (!teacherId) throw new Error('Teacher ID not found for this login');
 
                 // Step 2: Fetch courses taught by this teacher
-                const coursesRes = await axios.get(`http://localhost:8080/api/courses/teacher/${teacherId}`);
+                const coursesRes = await axios.get(`${process.env.REACT_APP_API_URL}api/courses/teacher/${teacherId}`);
                 const courses = coursesRes.data;
                 setCourses(courses);
 
                 // Step 3: Fetch quizzes created by this teacher
-                const quizzesRes = await axios.get(`http://localhost:8080/api/quizzes/teacher/${teacherId}`);
+                const quizzesRes = await axios.get(`${process.env.REACT_APP_API_URL}api/quizzes/teacher/${teacherId}`);
                 const quizzes = quizzesRes.data;
                 setQuizzes(quizzes);
 
@@ -65,7 +65,7 @@ export function TeacherQuizzesPage() {
 
         try {
             // Delete quiz from backend
-            await axios.delete(`http://localhost:8080/api/quizzes/${quizId}`);
+            await axios.delete(`${process.env.REACT_APP_API_URL}api/quizzes/${quizId}`);
 
             // Remove quiz from frontend state
             const updatedGroupedQuizzes = { ...groupedQuizzes };
@@ -91,7 +91,7 @@ export function TeacherQuizzesPage() {
         try {
             const updatedQuiz = { ...quiz, availability: !quiz.availability };
             const response = await axios.put(
-                `http://localhost:8080/api/quizzes/${quiz.quizId}`,
+                `${process.env.REACT_APP_API_URL}api/quizzes/${quiz.quizId}`,
                 updatedQuiz
             );
 

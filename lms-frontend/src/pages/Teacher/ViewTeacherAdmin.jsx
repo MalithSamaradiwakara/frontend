@@ -36,7 +36,7 @@ export default function ViewTeacherAdmin() {
 
     const getTeacherPhoto = (photoUrl) => {
         if (!photoUrl) return defaultTeacherImage;
-        return photoUrl.startsWith('http') ? photoUrl : `http://localhost:8080/${photoUrl}`;
+        return photoUrl.startsWith('http') ? photoUrl : `${process.env.REACT_APP_API_URL}${photoUrl}`;
     };
 
     if (loading) {

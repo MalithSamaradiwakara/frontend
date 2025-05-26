@@ -21,14 +21,14 @@ function AttemptQuiz() {
                 console.log(`Fetching quiz with ID: ${quizId}`);
 
                 // Fetch quiz details
-                const quizRes = await axios.get(`http://localhost:8080/api/quizzes/${quizId}`);
+                const quizRes = await axios.get(`${process.env.REACT_APP_API_URL}api/quizzes/${quizId}`);
                 console.log('Quiz Data:', quizRes.data);
                 if (!quizRes.data) throw new Error('Quiz not found');
 
                 setQuiz(quizRes.data);
 
                 // Fetch questions for the quiz
-                const questionRes = await axios.get(`http://localhost:8080/api/questions/quiz/${quizId}`);
+                const questionRes = await axios.get(`${process.env.REACT_APP_API_URL}api/questions/quiz/${quizId}`);
                 console.log('Questions Data:', questionRes.data);
                 if (!Array.isArray(questionRes.data) || questionRes.data.length === 0) {
                     throw new Error('No questions found for this quiz');
@@ -84,7 +84,7 @@ function AttemptQuiz() {
 
             console.log('Attempt Data:', attemptData);
 
-            await axios.post(`http://localhost:8080/api/attempts`, attemptData);
+            await axios.post(`${process.env.REACT_APP_API_URL}api/attempts`, attemptData);
             alert("Quiz submitted successfully!");
             navigate(`/student/${id}/quizzes`);
         } catch (err) {

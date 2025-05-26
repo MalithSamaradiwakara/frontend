@@ -29,18 +29,18 @@ export function SubmissionsPage() {
                 if (!loginId) throw new Error('User not logged in');
 
                 // 🔐 Step 1: Get teacher ID from login info
-                const loginRes = await axios.get(`http://localhost:8080/api/auth/login/${loginId}`);
+                const loginRes = await axios.get(`${process.env.REACT_APP_API_URL}api/auth/login/${loginId}`);
                 const teacherId = loginRes.data.teacherId;
                 if (!teacherId) throw new Error('No teacher ID found for the logged-in user');
 
                 // 📘 Step 2: Fetch teacher's courses
-                const { data: courses } = await axios.get(`http://localhost:8080/api/courses/teacher/${teacherId}`);
+                const { data: courses } = await axios.get(`${process.env.REACT_APP_API_URL}api/courses/teacher/${teacherId}`);
                 setCourses(courses);
 
                 // 📝 Step 3: Fetch assignments for each course
                 const assignmentsRes = await Promise.all(
                     courses.map(course =>
-                        axios.get(`http://localhost:8080/api/assignments/course/${course.courseId}`)
+                        axios.get(`${process.env.REACT_APP_API_URL}api/assignments/course/${course.courseId}`)
                     )
                 );
                 const allAssignments = assignmentsRes.flatMap(res => res.data);
@@ -48,7 +48,7 @@ export function SubmissionsPage() {
                 // 📩 Step 4: Fetch submissions for each assignment
                 const submissionsRes = await Promise.all(
                     allAssignments.map(assignment =>
-                        axios.get(`http://localhost:8080/api/submissions/assignment/${assignment.assignmentId}`)
+                        axios.get(`${process.env.REACT_APP_API_URL}api/submissions/assignment/${assignment.assignmentId}`)
                     )
                 );
                 const allSubmissions = submissionsRes.flatMap(res => res.data)
@@ -131,7 +131,7 @@ export function SubmissionsPage() {
             };
 
             await axios.put(
-                `http://localhost:8080/api/submissions/assignment/${assignmentId}/student/${studentId}`,
+                `${process.env.REACT_APP_API_URL}api/submissions/assignment/${assignmentId}/student/${studentId}`,
                 payload
             );
 

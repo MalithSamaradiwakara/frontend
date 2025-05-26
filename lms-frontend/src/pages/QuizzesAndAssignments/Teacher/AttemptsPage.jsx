@@ -34,18 +34,18 @@ export function AttemptsPage() {
             if (!loginId) throw new Error('User not logged in');
 
             // 🔐 Step 2: Get teacherId using loginId
-            const loginRes = await axios.get(`http://localhost:8080/api/auth/login/${loginId}`);
+            const loginRes = await axios.get(`${process.env.REACT_APP_API_URL}api/auth/login/${loginId}`);
             const teacherId = loginRes.data.teacherId;
             if (!teacherId) throw new Error('No teacher ID found for logged-in user');
 
             // 📘 Step 3: Fetch teacher's courses
-            const coursesRes = await axios.get(`http://localhost:8080/api/courses/teacher/${teacherId}`);
+            const coursesRes = await axios.get(`${process.env.REACT_APP_API_URL}api/courses/teacher/${teacherId}`);
             const coursesData = coursesRes.data;
             setCourses(coursesData);
 
             // 📘 Step 4: Fetch quizzes for each course
             const quizzesPromises = coursesData.map(course =>
-                axios.get(`http://localhost:8080/api/quizzes/course/${course.courseId}`)
+                axios.get(`${process.env.REACT_APP_API_URL}api/quizzes/course/${course.courseId}`)
             );
             const quizzesRes = await Promise.all(quizzesPromises);
             const teacherQuizzes = quizzesRes.flatMap(res => res.data);
@@ -53,7 +53,7 @@ export function AttemptsPage() {
 
             // 📘 Step 5: Fetch attempts for each quiz
             const attemptsPromises = teacherQuizzes.map(quiz =>
-                axios.get(`http://localhost:8080/api/attempts/quiz/${quiz.quizId}`)
+                axios.get(`${process.env.REACT_APP_API_URL}api/attempts/quiz/${quiz.quizId}`)
             );
             const attemptsRes = await Promise.all(attemptsPromises);
             const allAttempts = attemptsRes.flatMap(res => res.data);
@@ -144,7 +144,7 @@ export function AttemptsPage() {
             };
 
             await axios.put(
-                `http://localhost:8080/api/attempts/quiz/${quizId}/student/${studentId}`,
+                `${process.env.REACT_APP_API_URL}api/attempts/quiz/${quizId}/student/${studentId}`,
                 updatedValues
             );
 
